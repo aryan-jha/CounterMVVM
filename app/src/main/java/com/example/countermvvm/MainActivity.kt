@@ -26,19 +26,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.countermvvm.ui.theme.CounterMVVMTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val viewModel: CounterViewModel = viewModel()
             CounterMVVMTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    CounterApp()
+                    CounterApp(viewModel)
                 }
             }
         }
@@ -46,36 +48,27 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun CounterApp(){
-    var cnt = remember { mutableStateOf(0) }
-
-    fun incrementer(){
-        cnt.value++
-    }
-
-    fun decrementer(){
-        cnt.value--
-    }
+fun CounterApp(viewModel: CounterViewModel){
 
     Column (
         modifier = Modifier.fillMaxHeight(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
-        Text(text = "Count:- ${cnt.value}",
+        Text(text = "Count:- ${viewModel.cnt.value}",
             fontWeight = FontWeight.Bold,
             fontSize = 24.sp
         )
         Spacer(modifier = Modifier.height(15.dp))
 
         Row {
-            Button(onClick = { incrementer() }) {
+            Button(onClick = { viewModel.incrementer() }) {
                 Text(text = "Increment")
             }
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            Button(onClick = { decrementer() }) {
+            Button(onClick = { viewModel.decrementer() }) {
                 Text(text = "Decrement")
             }
         }
